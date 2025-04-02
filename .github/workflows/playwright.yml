@@ -6,6 +6,7 @@ on:
     branches: [ main, master ]
 jobs:
   changes:
+    name: Detect changes
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
@@ -22,6 +23,7 @@ jobs:
             - 'src/**'
             - '!**/*.md'
             - '!**/playwright/**'
+            - '!**/.github/**'
 
 
   test:
