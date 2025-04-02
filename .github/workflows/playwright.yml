@@ -5,7 +5,27 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
+  changes:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    outputs:
+      runtime: ${{ steps.filter.outputs.runtime }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - name: Get changed files
+      uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          runtime:
+            - 'src/**'
+            - '!**/*.md'
+            - '!**/playwright/**'
+
+
   test:
+    needs: changes
+    if: ${{ needs.changes.outputs.runtime == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
