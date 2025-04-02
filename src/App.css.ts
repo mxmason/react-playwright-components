@@ -14,7 +14,7 @@ export const logo = style({
 	height: "6em",
 	padding: "1.5em",
 	willChange: "filter",
-	transition: "filter 300ms",
+	transition: "filter 400ms",
 	selectors: {
 		"&:hover": {
 			filter: `drop-shadow(0 0 2em ${glowColor})`,
