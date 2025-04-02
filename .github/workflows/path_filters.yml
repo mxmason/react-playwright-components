@@ -1,0 +1,29 @@
+name: Path Filters
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Detect changes
+      uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          all:
+            - 'docs/all.md'
+          cove:
+            - 'docs/cove.md'
+          telehealth:
+            - 'docs/telehealth.md'
+    - name: Report changes
+      run: |
+        echo "All changes: ${{ steps.filter.outputs.all }}"
+        echo "Cove changes: ${{ steps.filter.outputs.cove }}"
+        echo "Telehealth changes: ${{ steps.filter.outputs.telehealth }}"
