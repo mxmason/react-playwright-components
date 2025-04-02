@@ -17,7 +17,17 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install chromium
+    - name: Get changed files
+      uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          runtime:
+            - 'src/**'
+            - '!**/*.md'
+            - '!**/playwright/**'
     - name: Run Playwright tests
+      if: ${{ steps.filter.outputs.runtime == 'true' }}
       run: npm run test:playwright
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
