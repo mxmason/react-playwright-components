@@ -5,7 +5,8 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
-  test:
+  print_changes:
+    name: Print changes
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
