@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
-      runtime: ${{ steps.filter.outputs.runtime }}
+      test-ui: ${{ steps.filter.outputs.test-ui }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,16 +19,17 @@ jobs:
         id: filter
         with:
           filters: |
-            runtime:
+            test-ui:
               - 'src/**'
               - 'package-lock.json'
-              - '!**/*.md'
-              - '!**/playwright/**'
-              - '!**/.github/**'
+              - 'tsconfig.*'
+              - 'playwright*.config.ts'
+              - 'vite.config.ts'
+              - '.github/workflows/playwright.yml'
 
   test:
     needs: changes
-    if: ${{ needs.changes.outputs.runtime == 'true' }}
+    if: ${{ needs.changes.outputs.test-ui == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -42,12 +43,12 @@ jobs:
         id: filter
         with:
           filters: |
-            runtime:
+            test-ui:
               - 'src/**'
               - '!**/*.md'
               - '!**/playwright/**'
       - name: Run Playwright tests
-        if: ${{ steps.filter.outputs.runtime == 'true' }}
+        if: ${{ steps.filter.outputs.test-ui == 'true' }}
         run: npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
