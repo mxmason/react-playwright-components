@@ -4,7 +4,8 @@ import { test, expect } from "@playwright/experimental-ct-react";
 import { PushButton } from "./PushButton";
 
 test("should render with expected ARIA state", async ({ mount }) => {
-	const component = await mount(<PushButton />);
+	const component = await mount(<PushButton>A button</PushButton>);
+	await expect(component).toHaveAccessibleName("A button");
 	await expect(component).toHaveAttribute("aria-pressed", "false");
 });
 
