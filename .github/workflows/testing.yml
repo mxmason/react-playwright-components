@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: UI Tests
 on:
   push:
     branches: [main, master]
@@ -28,7 +28,7 @@ jobs:
               - 'tsconfig.*'
               - 'playwright*.config.ts'
               - 'vite.config.ts'
-              - '.github/workflows/playwright.yml'
+              - '.github/workflows/testing.yml'
 
   test:
     needs: changes
