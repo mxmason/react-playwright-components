@@ -31,8 +31,9 @@ jobs:
               - '.github/workflows/testing.yml'
 
   test-playwright:
+    name: Test with Playwright
     needs: changes
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && needs.changes.outputs.test-ui == 'true' }}
+    if: ${{ needs.changes.outputs.test-ui == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -55,8 +56,9 @@ jobs:
           retention-days: 30
 
   test-vitest-browser:
+    name: Test with Vitest browser mode
     needs: changes
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && needs.changes.outputs.test-ui == 'true' }}
+    if: ${{ needs.changes.outputs.test-ui == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
