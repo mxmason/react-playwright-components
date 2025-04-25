@@ -5,7 +5,6 @@ import viteConfig from './vite.config.ts';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-
   testDir: './',
   testIgnore: '*browser*',
   /* The base directory, relative to the config file, for snapshot files created with toMatchSnapshot and toHaveScreenshot. */
@@ -24,10 +23,10 @@ export default defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-		ctViteConfig: {
-			plugins: viteConfig.plugins,
-			resolve: viteConfig.resolve,
-		},
+    ctViteConfig: {
+      plugins: viteConfig.plugins,
+      resolve: viteConfig.resolve,
+    },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
