@@ -30,7 +30,7 @@ jobs:
               - 'vite.config.ts'
               - '.github/workflows/testing.yml'
 
-  test:
+  test-playwright:
     needs: changes
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && needs.changes.outputs.test-ui == 'true' }}
     timeout-minutes: 60
@@ -53,3 +53,21 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+  test-vitest-browser:
+    needs: changes
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && needs.changes.outputs.test-ui == 'true' }}
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Set path to Chromium binary
+        run: echo "CHROMIUM_BIN=$(which chromium-browser)" >> $GITHUB_ENV
+      - name: Run Vitest
+        run: npm run test:vitest
