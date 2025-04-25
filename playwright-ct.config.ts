@@ -38,7 +38,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chromium',
+        launchOptions: process.env.CI
+          ? { executablePath: process.env.CHROMIUM_BIN }
+          : {},
+      },
     },
     {
       name: 'firefox',
