@@ -28,8 +28,11 @@
     "@vitest/browser": "3.1.2",
     "playwright": "1.52.0",
     "typescript": "5.8.3",
-    "vite": "6.3.3",
+    "vite": "npm:rolldown-vite@latest",
     "vitest": "3.1.2",
     "vitest-browser-react": "0.1.1"
+  },
+  "overrides": {
+    "vite": "npm:rolldown-vite@latest"
   }
 }
