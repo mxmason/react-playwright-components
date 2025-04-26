@@ -7,12 +7,13 @@ on:
 env:
   CI: true
 jobs:
-  changes:
+  setup:
     if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
-    name: Detect changes
+    name: Setup
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
+      CHROMIUM_BIN: ${{ steps.env.outputs.CHROMIUM_BIN }}
       test-ui: ${{ steps.filter.outputs.test-ui }}
     steps:
       - name: Checkout repository
@@ -29,13 +30,20 @@ jobs:
               - 'playwright*.config.ts'
               - 'vite.config.ts'
               - '.github/workflows/testing.yml'
+      - name: Export env variables
+        id: env
+        if: ${{ steps.filter.outputs.test-ui == 'true' }}
+        run: |
+          echo "CHROMIUM_BIN=$(which chromium-browser)" >> $GITHUB_OUTPUT
 
   test-playwright:
     name: Test with Playwright
-    needs: changes
-    if: ${{ needs.changes.outputs.test-ui == 'true' }}
+    needs: setup
+    if: ${{ needs.setup.outputs.test-ui == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      CHROMIUM_BIN: ${{ needs.setup.outputs.CHROMIUM_BIN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,8 +52,6 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
-      - name: Set path to Chromium binary
-        run: echo "CHROMIUM_BIN=$(which chromium-browser)" >> $GITHUB_ENV
       - name: Run Playwright tests
         run: npm run test:playwright
       - uses: actions/upload-artifact@v4
@@ -57,10 +63,12 @@ jobs:
 
   test-vitest-browser:
     name: Test with Vitest browser mode
-    needs: changes
-    if: ${{ needs.changes.outputs.test-ui == 'true' }}
+    needs: setup
+    if: ${{ needs.setup.outputs.test-ui == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      CHROMIUM_BIN: ${{ needs.setup.outputs.CHROMIUM_BIN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -69,7 +77,5 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
-      - name: Set path to Chromium binary
-        run: echo "CHROMIUM_BIN=$(which chromium-browser)" >> $GITHUB_ENV
       - name: Run Vitest
         run: npm run test:vitest
