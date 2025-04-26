@@ -1,4 +1,4 @@
-name: UI Tests
+name: CI
 on:
   push:
     branches: [main, master]
@@ -29,7 +29,7 @@ jobs:
               - 'tsconfig.*'
               - 'playwright*.config.ts'
               - 'vite.config.ts'
-              - '.github/workflows/testing.yml'
+              - '.github/workflows/ci.yml'
       - name: Export env variables
         id: env
         if: ${{ steps.filter.outputs.test-ui == 'true' }}
